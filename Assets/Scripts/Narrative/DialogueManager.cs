@@ -1,0 +1,65 @@
+using UnityEngine;
+using UnityEngine.Events;
+using System.Collections;
+
+namespace WhereFirefliesReturn.Narrative
+{
+    [System.Serializable]
+    public class DialogueLine
+    {
+        public string speakerName;
+        [TextArea(2, 5)] public string text;
+    }
+
+    public class DialogueManager : MonoBehaviour
+    {
+        public static DialogueManager Instance { get; private set; }
+
+        [Header("Settings")]
+        [SerializeField] private float charDelay = 0.03f;
+
+        public bool IsPlaying { get; private set; }
+
+        public UnityEvent<DialogueLine> OnLineStarted;
+        public UnityEvent<string> OnCharacterTyped;
+        public UnityEvent OnDialogueComplete;
+
+        void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+        }
+
+        public void PlayDialogue(DialogueLine[] lines)
+        {
+            if (IsPlaying) return;
+            StartCoroutine(RunDialogue(lines));
+        }
+
+        private IEnumerator RunDialogue(DialogueLine[] lines)
+        {
+            IsPlaying = true;
+
+            foreach (var line in lines)
+            {
+                OnLineStarted?.Invoke(line);
+
+                foreach (char c in line.text)
+                {
+                    OnCharacterTyped?.Invoke(c.ToString());
+                    yield return new WaitForSeconds(charDelay);
+                }
+
+                // Wait for player input to advance
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+            }
+
+            IsPlaying = false;
+            OnDialogueComplete?.Invoke();
+        }
+    }
+}
