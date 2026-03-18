@@ -3,13 +3,17 @@
 > A 3D narrative puzzle game developed for the **QS ImpACT Ideathon**
 
 ## SDG Focus
- **Primary:** SDG 15 – Life on Land & SDG 13 – Climate Action
- **Expanded Scope:**
-    SDG 6 – Clean Water & Sanitation: Players restore rivers, ponds, and clean irrigation systems.
-    SDG 2 – Zero Hunger: Balancing crop production with sustainable practices, preventing food scarcity.
-    SDG 7 – Affordable & Clean Energy: Players can implement solar-powered irrigation and compost systems.
-    SDG 11 – Sustainable Cities & Communities: Later levels include nearby village and market interaction, showing urban impact on the environment.
-    SDG 12 – Responsible Consumption & Production: Players learn resource trade-offs, waste management, and community cooperation.
+
+**Primary:**  
+- SDG 15 – Life on Land  
+- SDG 13 – Climate Action  
+
+**Expanded Scope:**  
+- **SDG 6 – Clean Water & Sanitation:** Players restore rivers, ponds, and clean irrigation systems. 
+- **SDG 2 – Zero Hunger:** Balance crop production with sustainable practices to prevent food scarcity.  
+- **SDG 7 – Affordable & Clean Energy:** Implement solar-powered irrigation and compost systems.  
+- **SDG 11 – Sustainable Cities & Communities:** Later levels include nearby village and market interactions, showing urban impact on the environment.  
+- **SDG 12 – Responsible Consumption & Production:** Players learn resource trade-offs, waste management, and community cooperation.
 
 
 ## Concept
