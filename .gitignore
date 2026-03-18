@@ -1,5 +1,6 @@
-# Claude Code local config (agents, skills — not committed)
+# Claude Code local config (agents, skills, project instructions — not committed)
 .claude/
+CLAUDE.md
 
 # Accidental duplicate Unity project (open the root QS/ folder in Unity Hub, not a subfolder)
 My project/
