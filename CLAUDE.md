@@ -107,4 +107,31 @@ Assets/
 - Do not edit `.unity` scene files in a text editor — always use the Unity Editor
 - Do not commit the `Library/` or `Temp/` folders — they are gitignored
 
+## Local AI Infrastructure (Ethan's machine only — not in repo)
+
+Stored in `QS/.claude/` — gitignored, never committed.
+
+### Agents
+
+| Agent | Model | Invoke With | Purpose |
+|-------|-------|-------------|---------|
+| `unity-dev` | Sonnet | `/agent:unity-dev` | Write Unity C# scripts, knows all existing systems |
+| `game-designer` | Haiku | `/agent:game-designer` | Mechanic balance, decision design, cycle pacing |
+| `sdg-advisor` | Haiku | `/agent:sdg-advisor` | SDG 15/13 accuracy, validates decisions and narrative |
+
+### Skills
+
+| Skill | Trigger | Purpose |
+|-------|---------|---------|
+| `qs-dev` | `/qs-dev` | Loads full project context — use at start of every session |
+| `unity-feature` | `/unity-feature <desc>` | Full feature workflow: design → C# script → Jerome wiring checklist |
+
+### Session Startup
+
+Always begin a new Claude Code session in this project with:
+```
+/qs-dev
+```
+This loads the full game state so you never need to re-explain the project.
+
 ## Mistakes & Corrections
