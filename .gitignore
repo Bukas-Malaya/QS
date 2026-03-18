@@ -1,6 +1,9 @@
 # Claude Code local config (agents, skills — not committed)
 .claude/
 
+# Accidental duplicate Unity project (open the root QS/ folder in Unity Hub, not a subfolder)
+My project/
+
 # Unity generated
 [Ll]ibrary/
 [Tt]emp/
