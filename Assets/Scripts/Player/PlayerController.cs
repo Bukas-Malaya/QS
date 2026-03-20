@@ -6,12 +6,12 @@ namespace WhereFirefliesReturn.Player
     public class PlayerController : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float moveSpeed = 8f;
         [SerializeField] private float rotationSpeed = 10f;
 
         [Header("Jump")]
-        [SerializeField] private float jumpForce = 20f;
-        [SerializeField] private float fallMultiplier = 2.5f;
+        [SerializeField] private float jumpForce = 4f;
+        [SerializeField] private float fallMultiplier = 3f;
         [SerializeField] private float lowJumpMultiplier = 2f;
 
         [Header("Camera")]
