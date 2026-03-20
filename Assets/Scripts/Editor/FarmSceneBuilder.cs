@@ -103,7 +103,7 @@ namespace WhereFirefliesReturn.Editor
             var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
             go.name = "Ground";
             go.transform.SetParent(parent.transform);
-            go.transform.localScale = new Vector3(10f, 1f, 10f); // 100x100 units
+            go.transform.localScale = new Vector3(3f, 1f, 3f); // 30x30 units — proportional to barn
             go.transform.position = Vector3.zero;
             ApplyColor(go, new Color(0.13f, 0.17f, 0.10f)); // dark muted grass
         }
