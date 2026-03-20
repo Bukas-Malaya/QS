@@ -1,0 +1,27 @@
+using UnityEngine;
+
+namespace WhereFirefliesReturn.Resources
+{
+    public class ResourceNode : MonoBehaviour
+    {
+        [Header("Yield")]
+        [SerializeField] private int water = 0;
+        [SerializeField] private int seeds = 0;
+        [SerializeField] private int cleanEnergy = 0;
+
+        [Header("Interaction")]
+        [SerializeField] private string promptText = "Press E to collect";
+
+        public bool IsCollected { get; private set; }
+        public string PromptText => promptText;
+
+        public void Collect()
+        {
+            if (IsCollected) return;
+
+            IsCollected = true;
+            ResourceManager.Instance?.Collect(water, seeds, cleanEnergy);
+            gameObject.SetActive(false);
+        }
+    }
+}

@@ -31,50 +31,46 @@ These are the systems you'll be connecting to. Read them before writing anything
 
 ---
 
-## 3. Scripts to Build
+## 3. Scripts to Wire Up (all already written — find them in the repo)
+
+All 5 remaining scripts are done. Jerome's job is to **attach them in Unity Editor and link the Inspector fields**.
 
 ### A. `ResourceNode.cs` — `Assets/Scripts/Resources/`
 
-Interactable object in the world that gives the player a resource when picked up.
-
-- [ ] Create `ResourceNode.cs` in `Scripts/Resources/`
-- [ ] Add a `ResourceType` enum field (Water / Seeds / CleanEnergy)
-- [ ] Add an `amount` int field (how much to give)
-- [ ] On interact: call `ResourceManager.Instance.Collect(type, amount)`
-- [ ] Disable the GameObject after pickup (or play a pickup animation)
-- [ ] Use namespace `WhereFirefliesReturn.Resources`
+Inspector fields to set per node placed in the scene:
+- `Water`, `Seeds`, `Clean Energy` — set how much each node gives (leave unused ones at 0)
+- `Prompt Text` — defaults to "Press E to collect"
+- Add a **Collider** to the GameObject so raycasts can hit it
+- Assign it to the **Interact Layer** (create a layer called `Interactable` if it doesn't exist)
 
 ### B. `PlayerInteraction.cs` — `Assets/Scripts/Player/`
 
-Raycasts from the player camera to detect nearby `ResourceNode` objects.
+Attach to the **Player** GameObject. Inspector fields:
+- `Interact Range` — default 3f
+- `Interact Layer` — set to your `Interactable` layer mask
+- `Prompt Panel` — drag in the UI GameObject that shows the "Press E" prompt
+- `Prompt Label` — drag in the TextMeshPro text inside that panel
 
-- [ ] Create `PlayerInteraction.cs` in `Scripts/Player/`
-- [ ] Raycast forward from the camera (max distance ~3f)
-- [ ] On `E` key press: call `Interact()` on the hit object if it has a `ResourceNode`
-- [ ] Show/hide a "Press E to collect" UI prompt when a node is in range
-- [ ] Use namespace `WhereFirefliesReturn.Player`
+### C. `DecisionPanelUI.cs` — `Assets/Scripts/UI/`
 
-### C. Decision UI Panel — `Assets/Scripts/UI/`
+Attach to a Canvas GameObject. Inspector fields:
+- `Cycle Decisions` — array of 5 entries (one per cycle). Each entry holds 2–3 `Decision` objects. **Julie fills these in.**
+- `Panel` — the root panel GameObject (hidden by default)
+- `Cycle Prompt Text` — TMP text showing the cycle prompt
+- `Decision Buttons` — drag in 2–3 Button GameObjects
+- `Button Labels` — matching TMP texts for each button
+- `Button Cost Labels` — matching TMP texts showing resource cost
+- Call `DecisionPanelUI.Instance.Show()` from a UI button at end of exploration phase
 
-Shows 2–3 choices at the end of each cycle. Julie provides the decision text.
+### D. `EndScreenManager.cs` — `Assets/Scripts/Core/`
 
-- [ ] Create `DecisionPanelUI.cs` in `Scripts/UI/`
-- [ ] Subscribe to `CycleManager`'s cycle-end event
-- [ ] Show a panel with 2–3 `Decision` buttons (text + resource cost + env impact)
-- [ ] On button click: call `DecisionSystem.Instance.ApplyDecision(decision)`
-- [ ] Hide the panel after a decision is made
-- [ ] Use namespace `WhereFirefliesReturn.UI`
-
-### D. End Screen Logic — `Assets/Scripts/Core/` or `Scripts/UI/`
-
-Reads the final `EnvironmentMeter` value and shows the correct ending.
-
-- [ ] Create `EndScreenManager.cs`
-- [ ] On scene load: read `EnvironmentMeter.Instance.CurrentValue`
-- [ ] If value ≥ 80 → show **restoration ending** (fireflies return)
-- [ ] If value ≤ 20 → show **collapse ending**
-- [ ] Otherwise → show **neutral/partial ending**
-- [ ] Use namespace `WhereFirefliesReturn.Core`
+Attach to a GameObject in the **EndScreen** scene. Inspector fields:
+- `Restoration Panel` — shown when env ≥ 80
+- `Collapse Panel` — shown when env ≤ 20
+- `Neutral Panel` — shown otherwise
+- `Score Text` — TMP text showing final health value
+- `Play Again Button` — restarts the game
+- `Main Menu Button` — returns to main menu
 
 ---
 
