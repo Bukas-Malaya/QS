@@ -64,23 +64,27 @@ namespace WhereFirefliesReturn.Editor
         // ── Lighting & Fog ─────────────────────────────────────────────────────
         static void SetupLighting()
         {
-            // Dusk/night mood — dim warm directional light
+            // Ensure a directional light exists
             var light = Object.FindFirstObjectByType<Light>();
-            if (light != null)
+            if (light == null)
             {
-                light.color = new Color(0.18f, 0.14f, 0.22f); // deep purple dusk
-                light.intensity = 0.4f;
-                light.transform.rotation = Quaternion.Euler(35f, -60f, 0f);
+                var lightGo = new GameObject("Directional Light");
+                light = lightGo.AddComponent<Light>();
+                light.type = LightType.Directional;
             }
+
+            light.color = new Color(0.6f, 0.5f, 0.4f); // warm dusk orange
+            light.intensity = 1.2f;
+            light.transform.rotation = Quaternion.Euler(35f, -60f, 0f);
 
             // Camera background — dark navy sky
             var cam = Camera.main;
             if (cam != null)
             {
-                cam.backgroundColor = new Color(0.04f, 0.05f, 0.10f);
+                cam.backgroundColor = new Color(0.08f, 0.10f, 0.18f);
                 cam.clearFlags = CameraClearFlags.SolidColor;
-                cam.transform.position = new Vector3(0f, 3f, -8f);
-                cam.transform.rotation = Quaternion.Euler(8f, 0f, 0f);
+                cam.transform.position = new Vector3(0f, 4f, -12f);
+                cam.transform.rotation = Quaternion.Euler(10f, 0f, 0f);
             }
         }
 
@@ -88,9 +92,9 @@ namespace WhereFirefliesReturn.Editor
         {
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogColor = new Color(0.06f, 0.07f, 0.12f);
-            RenderSettings.fogDensity = 0.04f;
-            RenderSettings.ambientLight = new Color(0.05f, 0.06f, 0.10f);
+            RenderSettings.fogColor = new Color(0.10f, 0.12f, 0.20f);
+            RenderSettings.fogDensity = 0.02f;
+            RenderSettings.ambientLight = new Color(0.20f, 0.18f, 0.25f); // visible ambient
         }
 
         // ── Ground ─────────────────────────────────────────────────────────────
