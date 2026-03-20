@@ -77,14 +77,14 @@ namespace WhereFirefliesReturn.Editor
             light.intensity = 1.2f;
             light.transform.rotation = Quaternion.Euler(35f, -60f, 0f);
 
-            // Camera background — dark navy sky
+            // Camera — cinematic 3/4 angle framing the barn
             var cam = Camera.main;
             if (cam != null)
             {
                 cam.backgroundColor = new Color(0.08f, 0.10f, 0.18f);
                 cam.clearFlags = CameraClearFlags.SolidColor;
-                cam.transform.position = new Vector3(0f, 4f, -12f);
-                cam.transform.rotation = Quaternion.Euler(10f, 0f, 0f);
+                cam.transform.position = new Vector3(-5f, 6f, -5f);
+                cam.transform.LookAt(new Vector3(8f, 1f, 10f)); // aim at barn center
             }
         }
 
@@ -273,12 +273,13 @@ namespace WhereFirefliesReturn.Editor
             var renderer = go.GetComponent<Renderer>();
             if (renderer == null) return;
 
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            if (mat.shader.name == "Hidden/InternalErrorShader")
-                mat = new Material(Shader.Find("Standard")); // fallback if not URP
-
-            mat.color = color;
-            renderer.sharedMaterial = mat;
+            // Use MaterialPropertyBlock — works with any shader (URP, HDRP, Standard)
+            // without creating new material assets
+            var mpb = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(mpb);
+            mpb.SetColor("_BaseColor", color); // URP Lit
+            mpb.SetColor("_Color", color);     // Standard / legacy fallback
+            renderer.SetPropertyBlock(mpb);
         }
     }
 }
