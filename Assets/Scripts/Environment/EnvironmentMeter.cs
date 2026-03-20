@@ -1,5 +1,7 @@
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace WhereFirefliesReturn.Environment
 {
@@ -21,6 +23,9 @@ namespace WhereFirefliesReturn.Environment
         public UnityEvent OnEcosystemCollapse;
         public UnityEvent OnEcosystemRestored;
 
+        [Header("Progress Bar")]
+        [SerializeField] private GameObject progressFill;
+
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -41,6 +46,22 @@ namespace WhereFirefliesReturn.Environment
                 OnEcosystemCollapse?.Invoke();
             else if (CurrentValue >= restorationThreshold)
                 OnEcosystemRestored?.Invoke();
+        }
+
+        public void GetCurrentFill() {
+            if (progressFill != null)
+            {
+                progressFill.GetComponent<Image>().fillAmount = NormalizedValue;
+            }
+        }
+
+        public void ResetMeter() {
+            CurrentValue = startValue;
+            OnValueChanged?.Invoke(CurrentValue);
+        }
+
+        void Update() {
+            GetCurrentFill();
         }
     }
 }

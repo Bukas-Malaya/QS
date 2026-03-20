@@ -14,8 +14,8 @@ namespace WhereFirefliesReturn.Player
         [SerializeField] private GameObject promptPanel;
         [SerializeField] private TextMeshProUGUI promptLabel;
 
-        private Camera _cam;
-        private ResourceNode _currentNode;
+        [SerializeField] private Camera _cam;
+        [SerializeField] private ResourceNode _currentNode;
 
         void Awake()
         {
@@ -27,20 +27,39 @@ namespace WhereFirefliesReturn.Player
             ScanForNode();
 
             if (_currentNode != null && Input.GetKeyDown(KeyCode.E))
+            {
                 _currentNode.Collect();
+                HidePrompt();
+                _currentNode = null;
+            }
         }
 
         void ScanForNode()
         {
-            Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
-            bool hit = Physics.Raycast(ray, out RaycastHit info, interactRange, interactLayer);
+            // Use overlap sphere to detect nearby resources
+            Collider[] hits = Physics.OverlapSphere(transform.position, interactRange, interactLayer);
 
-            ResourceNode node = hit ? info.collider.GetComponent<ResourceNode>() : null;
+            ResourceNode closestNode = null;
+            float closestDistance = Mathf.Infinity;
 
-            if (node != null && !node.IsCollected)
+            foreach (var hit in hits)
             {
-                _currentNode = node;
-                ShowPrompt(node.PromptText);
+                ResourceNode node = hit.GetComponent<ResourceNode>();
+                if (node != null && !node.IsCollected)
+                {
+                    float distance = Vector3.Distance(transform.position, hit.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestNode = node;
+                    }
+                }
+            }
+
+            if (closestNode != null)
+            {
+                _currentNode = closestNode;
+                ShowPrompt(_currentNode.PromptText);
             }
             else
             {
@@ -58,6 +77,7 @@ namespace WhereFirefliesReturn.Player
         void HidePrompt()
         {
             if (promptPanel != null) promptPanel.SetActive(false);
+            if (promptLabel != null) promptLabel.text = "";
         }
     }
 }
