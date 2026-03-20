@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using WhereFirefliesReturn.Environment;
 
 namespace WhereFirefliesReturn.Core
@@ -12,7 +13,7 @@ namespace WhereFirefliesReturn.Core
         [SerializeField] private GameObject neutralPanel;
 
         [Header("Score Display")]
-        [SerializeField] private Text scoreText;
+        [SerializeField] private TextMeshProUGUI scoreText;
 
         [Header("Buttons")]
         [SerializeField] private UnityEngine.UI.Button playAgainButton;

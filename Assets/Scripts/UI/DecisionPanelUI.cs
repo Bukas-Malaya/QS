@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using WhereFirefliesReturn.Farm;
 using WhereFirefliesReturn.Resources;
 
@@ -21,12 +22,12 @@ namespace WhereFirefliesReturn.UI
 
         [Header("Panel")]
         [SerializeField] private GameObject panel;
-        [SerializeField] private Text cyclePromptText;
+        [SerializeField] private TextMeshProUGUI cyclePromptText;
 
         [Header("Decision Buttons (assign 2-3 in Inspector)")]
         [SerializeField] private Button[] decisionButtons;
-        [SerializeField] private Text[] buttonLabels;
-        [SerializeField] private Text[] buttonCostLabels;
+        [SerializeField] private TextMeshProUGUI[] buttonLabels;
+        [SerializeField] private TextMeshProUGUI[] buttonCostLabels;
 
         void Awake()
         {

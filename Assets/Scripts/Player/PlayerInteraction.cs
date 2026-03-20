@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using WhereFirefliesReturn.Resources;
 
 namespace WhereFirefliesReturn.Player
@@ -12,7 +12,7 @@ namespace WhereFirefliesReturn.Player
 
         [Header("UI")]
         [SerializeField] private GameObject promptPanel;
-        [SerializeField] private Text promptLabel;
+        [SerializeField] private TextMeshProUGUI promptLabel;
 
         private Camera _cam;
         private ResourceNode _currentNode;
