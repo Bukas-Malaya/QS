@@ -12,6 +12,7 @@ namespace WhereFirefliesReturn.Editor
         public static void BuildFarmScene()
         {
             ClearExistingFarm();
+            EnsureCamera();
             SetupLighting();
             SetupFog();
 
@@ -41,6 +42,23 @@ namespace WhereFirefliesReturn.Editor
                 Object.DestroyImmediate(existing);
                 Debug.Log("[FarmSceneBuilder] Cleared existing farm.");
             }
+        }
+
+        // ── Camera ─────────────────────────────────────────────────────────────
+        static void EnsureCamera()
+        {
+            if (Camera.main != null) return;
+
+            var camGo = new GameObject("Main Camera");
+            camGo.tag = "MainCamera";
+            var cam = camGo.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.04f, 0.05f, 0.10f);
+            cam.transform.position = new Vector3(0f, 3f, -8f);
+            cam.transform.rotation = Quaternion.Euler(8f, 0f, 0f);
+            camGo.AddComponent<AudioListener>();
+
+            Debug.Log("[FarmSceneBuilder] Camera created.");
         }
 
         // ── Lighting & Fog ─────────────────────────────────────────────────────
