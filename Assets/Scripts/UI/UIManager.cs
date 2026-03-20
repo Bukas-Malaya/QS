@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using WhereFirefliesReturn.Environment;
 using WhereFirefliesReturn.Resources;
 using WhereFirefliesReturn.Farm;
@@ -19,12 +18,12 @@ namespace WhereFirefliesReturn.UI
         [SerializeField] private Color restoredColor = new Color(0.2f, 0.8f, 0.3f);
 
         [Header("Resources")]
-        [SerializeField] private TextMeshProUGUI waterText;
-        [SerializeField] private TextMeshProUGUI seedsText;
-        [SerializeField] private TextMeshProUGUI cleanEnergyText;
+        [SerializeField] private Text waterText;
+        [SerializeField] private Text seedsText;
+        [SerializeField] private Text cleanEnergyText;
 
         [Header("Cycle")]
-        [SerializeField] private TextMeshProUGUI cycleText;
+        [SerializeField] private Text cycleText;
 
         void Awake()
         {
