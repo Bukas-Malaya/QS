@@ -25,7 +25,7 @@ namespace WhereFirefliesReturn.Narrative
         {
             if (startOnAwake && delayBeforeStart > 0f)
             {
-                Invoke(nameof(PlaySampleDialogue), delayBeforeStart);
+                Invoke(nameof(PlayDialogue), delayBeforeStart);
             }
                 
         }
@@ -35,7 +35,7 @@ namespace WhereFirefliesReturn.Narrative
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Debug.Log("Sample dialogue triggered.");
-                PlaySampleDialogue();
+                PlayDialogue();
             }
         }
 
@@ -51,6 +51,11 @@ namespace WhereFirefliesReturn.Narrative
                 };
             }
             
+            DialogueManager.Instance?.PlayDialogue(dialogueLines);
+        }
+
+        public void PlayDialogue()
+        {
             DialogueManager.Instance?.PlayDialogue(dialogueLines);
         }
     }
