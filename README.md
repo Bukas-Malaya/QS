@@ -41,7 +41,8 @@ Assets/
 ├── Art/           # Sprites, 3D models, backgrounds, UI art
 ├── Audio/         # Music and SFX
 ├── Prefabs/       # Reusable Unity prefabs
-└── Data/          # ScriptableObjects (resources, dialogue, level config)
+├── Data/          # ScriptableObjects (resources, dialogue, level config)
+└── Shaders/       # Unity Shaders for UI and 3D models
 ```
 
 ## Getting Started
