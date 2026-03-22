@@ -4,8 +4,9 @@ using System.Collections;
 
 namespace WhereFirefliesReturn.Narrative
 {
+    
     [System.Serializable]
-    public class DialogueLine
+    public class DialogueLine // Represents a single line of dialogue
     {
         public string speakerName;
         [TextArea(2, 5)] public string text;
@@ -44,16 +45,12 @@ namespace WhereFirefliesReturn.Narrative
         {
             IsPlaying = true;
 
-            foreach (var line in lines)
-            {
+            foreach (var line in lines) {
                 OnLineStarted?.Invoke(line);
-
-                foreach (char c in line.text)
-                {
+                foreach (char c in line.text) {
                     OnCharacterTyped?.Invoke(c.ToString());
                     yield return new WaitForSeconds(charDelay);
                 }
-
                 // Wait for player input to advance
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
             }

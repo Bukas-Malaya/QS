@@ -22,6 +22,9 @@ namespace WhereFirefliesReturn.Resources
             IsCollected = true;
             ResourceManager.Instance?.Collect(water, seeds, cleanEnergy);
             gameObject.SetActive(false);
+
+            //debug log for testing purposes
+            Debug.Log("Resource collected: " + water + " water, " + seeds + " seeds, " + cleanEnergy + " clean energy.");
         }
     }
 }

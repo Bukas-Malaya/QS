@@ -25,6 +25,9 @@ namespace WhereFirefliesReturn.Player
         private bool _isJumping;
         private float _originalJumpForce;
 
+        public bool IsGrounded => _controller.isGrounded;
+        public bool CanMove = true;
+
         void Awake()
         {
             _controller = GetComponent<CharacterController>();
@@ -34,14 +37,18 @@ namespace WhereFirefliesReturn.Player
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space)) {
-                Jump();
-            }
-            if (Input.GetKeyUp(KeyCode.Space) && _velocity.y > 0) {
-                _velocity.y *= 0.5f; // Cut jump short if button released early
+            if (CanMove) {
+                if (Input.GetKeyDown(KeyCode.Space)) {
+                    Jump();
+                }
+                if (Input.GetKeyUp(KeyCode.Space) && _velocity.y > 0) {
+                    _velocity.y *= 0.5f; // Cut jump short if button released early
+                } 
+                Move();
             }
             
-            Move();
+            
+            
             ApplyGravity();
         }
 
@@ -120,6 +127,16 @@ namespace WhereFirefliesReturn.Player
                 _velocity.y = jumpForce;
                 _isJumping = true;
             }
+        }
+
+        public void PlayerStartedDialogue(){
+            CanMove = false;
+            _velocity = Vector3.zero;
+            if (trailEffect != null && trailEffect.isPlaying) trailEffect.Stop();
+        }
+
+        public void PlayerEndedDialogue(){
+            CanMove = true;
         }
     }
 }
