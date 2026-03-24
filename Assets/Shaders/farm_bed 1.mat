@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StylizedWater
-  m_Shader: {fileID: -6465566751694194690, guid: d38ad618b95080e488d62441d763168a, type: 3}
+  m_Name: farm_bed 1
+  m_Shader: {fileID: -6465566751694194690, guid: b1eb11dd27ef03c428ebed29ae454dd6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -19,7 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: _FoamVelocity
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -27,21 +27,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_edf7597669544d1290dc8604216d6786_Out_0_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3f1e522b67bb78741b9f7adf872c64fa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _FoamDistance: 0.63
-    - _FoamScale: 442.2
-    - _WaveSpeed: 0.65
-    - _WaveStrength: 0.2
+    - _SoilHealth: 0.14
     m_Colors:
-    - _BaseColor: {r: 0.2474635, g: 0.4247509, b: 0.7830189, a: 0.5372549}
-    - _FoamColor: {r: 0.56802493, g: 0.54294235, b: 0.7830189, a: 1}
-    - _FoamVelocity: {r: 0.01, g: 0.01, b: 0, a: 0}
+    - _BaseColor: {r: 0.3867925, g: 0.296243, b: 0.2317106, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &1316927197606740425
+--- !u!114 &8255764180412369994
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
