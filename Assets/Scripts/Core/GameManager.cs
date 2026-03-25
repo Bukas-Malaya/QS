@@ -32,6 +32,14 @@ namespace WhereFirefliesReturn.Core
             SceneController.Instance.LoadScene("EndScreen");
         }
 
+        // Parameterless wrappers — use these in UnityEvent Inspector wiring
+        public void EndGame()
+        {
+            bool restored = WhereFirefliesReturn.Environment.EnvironmentMeter.Instance != null
+                && WhereFirefliesReturn.Environment.EnvironmentMeter.Instance.CurrentValue >= 80f;
+            GameOver(restored);
+        }
+
         public void ReturnToMenu()
         {
             ChangeState(GameState.MainMenu);
