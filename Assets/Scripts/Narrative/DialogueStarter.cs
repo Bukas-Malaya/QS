@@ -17,7 +17,7 @@ namespace WhereFirefliesReturn.Narrative
         {
             if (startOnAwake && dialogueLines != null && dialogueLines.Length > 0)
             {
-                PlaySampleDialogue();
+                PlayDialogue();
             }
         }
         
@@ -32,16 +32,6 @@ namespace WhereFirefliesReturn.Narrative
 
         private void Update()
         {
-        }
-
-        public void PlaySampleDialogue()
-        {
-            if (dialogueLines == null || dialogueLines.Length == 0)
-            {
-                return;
-            }
-            
-            DialogueManager.Instance?.PlayDialogue(dialogueLines);
         }
 
         public void PlayDialogue()

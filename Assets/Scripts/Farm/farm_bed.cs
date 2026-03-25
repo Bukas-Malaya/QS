@@ -41,7 +41,7 @@ namespace WhereFirefliesReturn.Resources
             if (!isPlanted)
             {
                 if (cropPrefab != null)
-                    Instantiate(cropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                    Instantiate(cropPrefab, transform.position + Vector3.up * 1.2f, Quaternion.identity);
                 isPlanted = true;
                 PromptText = "Already planted";
                 Debug.Log($"[farm_bed] Planted on {gameObject.name}.");
