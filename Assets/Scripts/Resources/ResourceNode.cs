@@ -12,10 +12,10 @@ namespace WhereFirefliesReturn.Resources
         [Header("Interaction")]
         [SerializeField] private string promptText = "Press E to collect";
 
-        public bool IsCollected { get; private set; }
-        public string PromptText => promptText;
+        public virtual bool IsCollected { get; protected set; }
+        public string PromptText { get => promptText; set => promptText = value; }
 
-        public void Collect()
+        public virtual void Collect()
         {
             if (IsCollected) return;
 

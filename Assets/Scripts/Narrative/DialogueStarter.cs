@@ -38,12 +38,7 @@ namespace WhereFirefliesReturn.Narrative
         {
             if (dialogueLines == null || dialogueLines.Length == 0)
             {
-                dialogueLines = new DialogueLine[]
-                {
-                    new DialogueLine { speakerName = "Narrator", text = "Welcome to the farm!" },
-                    new DialogueLine { speakerName = "Player", text = "Hello, world!" },
-                    new DialogueLine { speakerName = "Narrator", text = "This is a sample dialogue." }
-                };
+                return;
             }
             
             DialogueManager.Instance?.PlayDialogue(dialogueLines);
