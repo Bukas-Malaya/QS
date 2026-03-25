@@ -1,26 +1,53 @@
-# Fonts Setup — Pixel Art Theme
+# Fonts Setup — Colonial Quill Theme
 
-## Primary Font: Press Start 2P
+## Recommended Pairing
 
-**Download:** https://fonts.google.com/specimen/Press+Start+2P
-**Direct TTF:** https://github.com/google/fonts/blob/main/ofl/pressstart2p/PressStart2P-Regular.ttf
-**License:** SIL Open Font License — free, commercial use OK. No attribution needed.
-
-### How to install in Unity:
-1. Download `PressStart2P-Regular.ttf`
-2. Drop it into this folder (`Assets/Art/Fonts/`)
-3. In Unity, right-click the TTF → **Create → TextMeshPro → Font Asset**
-4. Name it `PressStart2P SDF`
-5. Replace ALL existing TMP font references in the scene with this asset
+Use **two fonts together**:
+- **Pinyon Script** → titles, speaker names, dialogue headers, cycle labels
+- **Cormorant Garamond Italic** → body text, dialogue lines, descriptions, cost labels
 
 ---
 
-## Backup Font: Minecraft Font by Mikiz
+## Font 1: Pinyon Script (Headers / Titles)
 
-**Download:** https://mikiz.itch.io/minecraft-font
-**License:** Free for personal and commercial use.
+**Download:** https://fonts.google.com/specimen/Pinyon+Script
+**License:** SIL Open Font License — free, commercial use OK. No attribution needed.
+**Vibe:** 18th century English roundhand. High quill pressure on downstrokes, hairline upstrokes. Closest to Hamilton title card lettering and the Declaration of Independence handwriting.
 
-Same install steps as above.
+### Unity Install:
+1. Download `PinyonScript-Regular.ttf`
+2. Drop into `Assets/Art/Fonts/`
+3. In Unity: **Window → TextMeshPro → Font Asset Creator**
+4. Set Atlas Resolution to **4096×4096** (hairline strokes WILL break at 512/1024)
+5. Name it `PinyonScript SDF`
+6. Use for: speaker names, cycle titles, UI headers, end screen text
+
+**Readability warning:** Use at 18px minimum. Headers only — not body copy.
+
+---
+
+## Font 2: Cormorant Garamond (Body / Dialogue)
+
+**Download:** https://fonts.google.com/specimen/Cormorant+Garamond
+**License:** SIL Open Font License — free, commercial use OK. No attribution needed.
+**Vibe:** A revival of 16th–17th century Garamond — the dominant type of the colonial era. The italic reads like quill-printed parchment. Use the **Italic** weight.
+
+### Unity Install:
+1. Download `CormorantGaramond-Italic.ttf`
+2. Drop into `Assets/Art/Fonts/`
+3. Font Asset Creator → Atlas Resolution **2048×2048** is fine for this one
+4. Name it `CormorantGaramond-Italic SDF`
+5. Use for: dialogue text, decision descriptions, resource labels, all body copy
+
+---
+
+## Backup Options (if pairing above doesn't feel right)
+
+| Font | Link | Best For |
+|------|------|----------|
+| IM Fell English | fonts.google.com/specimen/IM+Fell+English | Most historically accurate — actual 1686 Oxford printing type |
+| Lovers Quarrel | fonts.google.com/specimen/Lovers+Quarrel | More ornate, decorative uppercase — good for title screen only |
+| Almendra | fonts.google.com/specimen/Almendra | Bridges handcrafted + readable — good all-rounder |
 
 ---
 
