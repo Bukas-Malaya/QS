@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using WhereFirefliesReturn.Farm;
 using WhereFirefliesReturn.Resources;
+using WhereFirefliesReturn.Player;
 
 namespace WhereFirefliesReturn.UI
 {
@@ -102,6 +103,9 @@ namespace WhereFirefliesReturn.UI
             }
 
             panel?.SetActive(true);
+
+            var player = FindFirstObjectByType<PlayerController>();
+            if (player != null) player.PlayerStartedDialogue();
         }
 
         void OnDecisionChosen(Decision decision)
@@ -113,6 +117,8 @@ namespace WhereFirefliesReturn.UI
         void Hide()
         {
             panel?.SetActive(false);
+            var player = FindFirstObjectByType<PlayerController>();
+            if (player != null) player.PlayerEndedDialogue();
         }
 
         string BuildCostString(ResourceCost cost)

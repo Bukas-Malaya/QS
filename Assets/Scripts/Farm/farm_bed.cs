@@ -30,12 +30,21 @@ namespace WhereFirefliesReturn.Resources
             PromptText = text;
         }
 
+        public override void Collect()
+        {
+            if (!isPlanted)
+                Plant();
+        }
+
         public override void Plant()
         {
             if (!isPlanted)
             {
-                Instantiate(cropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                if (cropPrefab != null)
+                    Instantiate(cropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
                 isPlanted = true;
+                PromptText = "Already planted";
+                Debug.Log($"[farm_bed] Planted on {gameObject.name}.");
             }
         }
 

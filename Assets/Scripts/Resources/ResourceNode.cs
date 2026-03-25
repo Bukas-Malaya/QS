@@ -15,6 +15,8 @@ namespace WhereFirefliesReturn.Resources
         public virtual bool IsCollected { get; protected set; }
         public string PromptText { get => promptText; set => promptText = value; }
 
+        public virtual void Plant() { }
+
         public virtual void Collect()
         {
             if (IsCollected) return;

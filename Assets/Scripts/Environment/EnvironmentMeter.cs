@@ -34,6 +34,7 @@ namespace WhereFirefliesReturn.Environment
                 return;
             }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
             CurrentValue = startValue;
         }
 
