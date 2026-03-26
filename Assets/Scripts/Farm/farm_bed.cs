@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using WhereFirefliesReturn.Resources;
 
@@ -41,7 +42,7 @@ namespace WhereFirefliesReturn.Resources
             if (!isPlanted)
             {
                 if (cropPrefab != null)
-                    Instantiate(cropPrefab, transform.position + Vector3.up * 1.2f, Quaternion.identity);
+                    Instantiate(cropPrefab, transform.position + Vector3.up * 1.2f, Quaternion.Euler(45, -90, 0));
                 isPlanted = true;
                 PromptText = "Already planted";
                 Debug.Log($"[farm_bed] Planted on {gameObject.name}.");
