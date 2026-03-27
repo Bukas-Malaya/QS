@@ -2192,7 +2192,7 @@
     "m_ObjectId": "5e9c4811919d4d2891da0754e4436fe8",
     "m_Title": "Billboard view",
     "m_Position": {
-        "x": -844.0000610351563,
+        "x": -844.0,
         "y": -1753.0
     }
 }
@@ -3255,7 +3255,7 @@
     "m_Title": "billboard",
     "m_Position": {
         "x": -825.0,
-        "y": -711.9999389648438
+        "y": -712.0
     }
 }
 
@@ -4695,7 +4695,7 @@
     "m_Title": "Bse Color and Teture",
     "m_Position": {
         "x": -345.0,
-        "y": 36.0001335144043
+        "y": 36.0
     }
 }
 
