@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using WhereFirefliesReturn.Narrative;
+using System.Collections;
 
 namespace WhereFirefliesReturn.UI
 {
@@ -12,11 +13,28 @@ namespace WhereFirefliesReturn.UI
         [SerializeField] private TMP_Text speakerNameText;
         [SerializeField] private TMP_Text dialogueText;
         
+        [Header("Animation Settings")]
+        [SerializeField] private float tweenDuration = 0.3f;
+        [SerializeField] private float panDistance = 50f; // How far to pan up/down
+         
         private bool isSubscribed = false;
+        private RectTransform panelRectTransform;
+        private Vector2 originalPosition;
+        private Coroutine currentTween;
 
         private void Awake()
         {
-            // Hide UI immediately
+            // Cache the RectTransform for tweening
+            if (dialoguePanel != null)
+            {
+                panelRectTransform = dialoguePanel.GetComponent<RectTransform>();
+                if (panelRectTransform != null)
+                {
+                    originalPosition = panelRectTransform.anchoredPosition;
+                }
+            }
+            
+            // Hide UI immediately (start positioned off-screen)
             Hide();
             
             // Try to subscribe if DialogueManager is already initialized
@@ -98,15 +116,63 @@ namespace WhereFirefliesReturn.UI
         }
 
         private void Show()
-        {
-            if (dialoguePanel != null)
-                dialoguePanel.SetActive(true);
-        }
+{
+    if (dialoguePanel != null)
+    {
+        dialoguePanel.SetActive(true);
+        // Start panning up tween: from below to original position
+        if (currentTween != null)
+            StopCoroutine(currentTween);
+        currentTween = StartCoroutine(TweenPanel(originalPosition - new Vector2(0, panDistance), originalPosition));
+    }
+}
 
-        private void Hide()
+private void Hide()
+{
+    if (dialoguePanel != null)
+    {
+        // Start panning down tween: from original position to below, then hide
+        if (currentTween != null)
+            StopCoroutine(currentTween);
+        currentTween = StartCoroutine(TweenPanel(originalPosition, originalPosition - new Vector2(0, panDistance), () => 
         {
-            if (dialoguePanel != null)
-                dialoguePanel.SetActive(false);
+            dialoguePanel.SetActive(false);
+        }));
+    }
+}
+
+private IEnumerator TweenPanel(Vector2 startPos, Vector2 endPos, System.Action onComplete = null)
+{
+    float elapsedTime = 0f;
+    
+    while (elapsedTime < tweenDuration)
+    {
+        elapsedTime += Time.deltaTime;
+        float t = Mathf.Clamp01(elapsedTime / tweenDuration);
+        // Optional: use easing function for smoother animation
+        t = t * t * (3f - 2f * t); // Smoothstep easing
+        
+        if (panelRectTransform != null)
+        {
+            panelRectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
         }
+        
+        yield return null;
+    }
+    
+    // Ensure we end at the exact target position
+    if (panelRectTransform != null)
+    {
+        panelRectTransform.anchoredPosition = endPos;
+    }
+    
+    onComplete?.Invoke();
+    currentTween = null;
+}
+
+private IEnumerator TweenPanel(Vector2 startPos, Vector2 endPos)
+{
+    return TweenPanel(startPos, endPos, null);
+}
     }
 }

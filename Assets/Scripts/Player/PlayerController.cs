@@ -24,6 +24,7 @@ namespace WhereFirefliesReturn.Player
         private Vector3 _velocity;
         private bool _isJumping;
         private float _originalJumpForce;
+        private Animator _animator;
 
         public bool IsGrounded => _controller.isGrounded;
         public bool CanMove = true;
@@ -31,6 +32,7 @@ namespace WhereFirefliesReturn.Player
         void Awake()
         {
             _controller = GetComponent<CharacterController>();
+            _animator = GetComponent<Animator>();
             if (cameraTransform == null)
                 cameraTransform = Camera.main?.transform;
         }
@@ -38,18 +40,30 @@ namespace WhereFirefliesReturn.Player
         void Update()
         {
             if (CanMove) {
-                if (Input.GetKeyDown(KeyCode.Space)) {
-                    Jump();
-                }
-                if (Input.GetKeyUp(KeyCode.Space) && _velocity.y > 0) {
-                    _velocity.y *= 0.5f; // Cut jump short if button released early
-                } 
+            //    if (Input.GetKeyDown(KeyCode.Space)) {
+            //        Jump();
+            //    }
+            //    if (Input.GetKeyUp(KeyCode.Space) && _velocity.y > 0) {
+            //        _velocity.y *= 0.5f; // Cut jump short if button released early
+            //    } 
                 Move();
             }
             
             
             
             ApplyGravity();
+            UpdateAnimator();
+        }
+
+        void UpdateAnimator()
+        {
+            if (_animator != null)
+            {
+                // Use CharacterController's actual velocity for animation
+                float horizontalSpeed = new Vector3(_controller.velocity.x, 0f, _controller.velocity.z).magnitude;
+                _animator.SetFloat("Speed", horizontalSpeed);
+                _animator.SetFloat("VerticalVelocity", _controller.velocity.y);
+            }
         }
 
         void Move()
@@ -77,12 +91,36 @@ namespace WhereFirefliesReturn.Player
                 camForward.y = 0f;
                 camRight.y = 0f;
                 direction = (camForward * v + camRight * h).normalized;
+                
+            }
+            
+            if (v!= 0) {
+                if (!_animator.enabled)
+                {
+                    _animator.enabled = true;
+                }
+               if (direction.x > 0){
+                _animator.Play("player_walk_front");
+                } else if (direction.x < 0){
+                    _animator.Play("player_walk_back");
+                }
+            } else if (h != 0){
+                if (!_animator.enabled)
+                {
+                    _animator.enabled = true;
+                }
+                if (direction.z < 0){
+                _animator.Play("player_walk_left");
+                } else if (direction.z > 0){
+                    _animator.Play("player_walk_right");
+                }
+            } else {
+                _animator.Play(_animator.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, 0f);// Reset to start of current animation to prevent blending issues
+                _animator.enabled = false;
             }
 
-            // Apply movement
             _controller.Move(direction * moveSpeed * Time.deltaTime);
 
-            // Rotate player to face movement direction (only when moving)
             if (h != 0 || v != 0)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
