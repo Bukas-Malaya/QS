@@ -13,7 +13,7 @@ namespace WhereFirefliesReturn.UI
         void Start()
         {
             if (startButton != null)
-                startButton.onClick.AddListener(() => GameManager.Instance?.StartGame());
+                startButton.onClick.AddListener(() => SceneController.Instance.LoadScene("GameWorld"));
 
             if (quitButton != null)
                 quitButton.onClick.AddListener(() => Application.Quit());

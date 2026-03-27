@@ -14,6 +14,8 @@ namespace WhereFirefliesReturn.Resources
         [Header("Crop")]
         [SerializeField] private bool isEdgeBed = false; // hint: water spinach prefers edges
         public CropType plantedCrop = CropType.None;
+
+        public GameObject CurrentCropObject { get; private set; }
  
         [Header("Prefabs per crop type")]
         [SerializeField] private GameObject sweetPotatoPrefab;
@@ -32,9 +34,9 @@ namespace WhereFirefliesReturn.Resources
         [SerializeField] private string emptyPrompt = "Press E to plant crop";
         private MaterialPropertyBlock propertyBlock;
         private Renderer renderer;
-        [SerializeField] bool isPlanted = false; //Whether the crop is planted or not
+        [SerializeField] public bool isPlanted = false; //Whether the crop is planted or not
         public Color BaseColor { get { return propertyBlock.GetColor("_BaseColor"); } }
-        public override bool IsCollected { get => isPlanted; protected set => isPlanted = value; }
+        public override bool IsCollected { get => false; protected set => isPlanted = value; }
         
         void Start()
         {
@@ -53,8 +55,40 @@ namespace WhereFirefliesReturn.Resources
 
         public override void Collect()
         {
-            if (isPlanted) return;
+            if (isPlanted)
+            {
+                var selected = Hotbar.Instance?.SelectedItem;
+                Debug.Log($"Interacting with planted bed. Selected item: {(selected != null ? selected.itemName : "None")}");
+                if (selected != null && selected.category == ItemCategory.Tool && selected.itemName == "Shovel")
+                    Uproot();
+                else
+                    StartCoroutine(TempPrompt("Equip a shovel to remove crop"));
+                return;
+            }
             Plant();
+        }
+        public void Uproot()
+        {
+            if (!isPlanted) return;
+
+            // Destroy the crop GameObject (find it above the bed)
+            // Assumes the crop is a direct child or you can find it by position
+            if (CurrentCropObject != null) Destroy(CurrentCropObject);
+            CurrentCropObject = null;
+
+            plantedCrop = CropType.None;
+            isPlanted = false;
+            PromptText = emptyPrompt;
+            ApplySoilColor(infertileColor);
+
+            SetMismatchParticles(false);
+            SetCompanionParticles(false);
+
+            // Re-evaluate neighbors
+            foreach (var n in neighbors)
+                if (n != null) n.EvaluateCompanions();
+
+            FieldPuzzleManager.Instance?.OnBedPlanted();
         }
 
         public override void Plant()
@@ -63,7 +97,7 @@ namespace WhereFirefliesReturn.Resources
 
             if (selected == CropType.None)
             {
-                StartCoroutine(TempPrompt("No crop selected"));
+                StartCoroutine(TempPrompt(""));
                 return;
             }
 
@@ -78,7 +112,7 @@ namespace WhereFirefliesReturn.Resources
             }
             if (!isPlanted)
             {
-                Instantiate(GetCropPrefab(selected), transform.position + Vector3.up * 1f, Quaternion.Euler(45, -90, 0));
+                CurrentCropObject = Instantiate(GetCropPrefab(selected), transform.position + Vector3.up * 1f, Quaternion.Euler(45, -90, 0));
                 isPlanted = true;
                 plantedCrop = selected;
                 PromptText = "Already planted";
@@ -105,7 +139,7 @@ namespace WhereFirefliesReturn.Resources
             var prefab = GetCropPrefab(crop);
             if (prefab == null) return;
 
-            Instantiate(prefab, transform.position + Vector3.up * 1f, Quaternion.Euler(45, -90, 0));
+            CurrentCropObject = Instantiate(prefab, transform.position + Vector3.up * 1f, Quaternion.Euler(45, -90, 0));
             isPlanted = true;
             plantedCrop = crop;
             PromptText = "Already planted";
@@ -180,13 +214,13 @@ namespace WhereFirefliesReturn.Resources
         }
 
         void SetMismatchParticles(bool active) {
-            Debug.Log($"[{name}] Setting mismatch particles: {active}");
+            //Debug.Log($"[{name}] Setting mismatch particles: {active}");
             if (mismatchParticles == null) return;
             if (active && !mismatchParticles.isPlaying) mismatchParticles.Play();
             else if (!active && mismatchParticles.isPlaying) mismatchParticles.Stop();
         }
         void SetCompanionParticles(bool active) {
-            Debug.Log($"[{name}] Setting companion particles: {active}");
+            //Debug.Log($"[{name}] Setting companion particles: {active}");
             if (companionParticles == null) return;
             if (active && !companionParticles.isPlaying) companionParticles.Play();
             else if (!active && companionParticles.isPlaying) companionParticles.Stop();

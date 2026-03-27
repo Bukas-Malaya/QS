@@ -115,7 +115,7 @@ namespace WhereFirefliesReturn.Player
                     _animator.Play("player_walk_right");
                 }
             } else {
-                _animator.Play(_animator.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, 0f);// Reset to start of current animation to prevent blending issues
+                _animator.Play(_animator.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, 0f);
                 _animator.enabled = false;
             }
 

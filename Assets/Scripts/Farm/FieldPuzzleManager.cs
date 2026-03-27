@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using WhereFirefliesReturn.Environment;
 
 namespace WhereFirefliesReturn.Resources
 {
@@ -48,19 +49,28 @@ namespace WhereFirefliesReturn.Resources
 
         IEnumerator CheckCompletionDelayed()
         {
+            Debug.Log("[FieldPuzzleManager] Checking puzzle completion...");
+            //check if 80% of the beds are planted before doing the more expensive companion check
+             int plantedCount = 0;
             yield return new WaitForSeconds(completionCheckDelay);
 
             // All beds must be planted
             foreach (var bed in beds)
-                if (bed == null || !bed.IsCollected) yield break;
+                if (bed == null || !bed.isPlanted) yield break;
 
             // All beds must be correctly placed
             foreach (var bed in beds)
-                if (!bed.IsCorrectlyPlaced()) yield break;
-
+                if (bed != null && bed.IsCorrectlyPlaced())
+                {
+                    plantedCount++;
+                    
+                }
+            if (plantedCount < beds.Length * 0.7f)
+                yield return isSolved = false;
             // ✓ Puzzle solved!
             isSolved = true;
             TriggerSolved();
+            EnvironmentMeter.Instance?.Adjust(plantedCount);
         }
 
         void TriggerSolved()
@@ -78,8 +88,10 @@ namespace WhereFirefliesReturn.Resources
             if (solvedSound != null && audioSource != null)
                 audioSource.PlayOneShot(solvedSound);
 
+            Debug.Log("[FieldPuzzleManager] Triggering OnPuzzleSolved event.");
             // Trigger dialogue/cutscene (wired in Inspector)
             OnPuzzleSolved?.Invoke();
+            
         }
 
         Vector3 GetFieldCenter()

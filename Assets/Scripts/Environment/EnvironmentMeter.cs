@@ -12,8 +12,8 @@ namespace WhereFirefliesReturn.Environment
         [Header("Settings")]
         [SerializeField] private float maxValue = 100f;
         [SerializeField] private float startValue = 50f;
-        [SerializeField] private float collapseThreshold = 20f;
-        [SerializeField] private float restorationThreshold = 80f;
+        [SerializeField] private float collapseThreshold = 15f;
+        [SerializeField] private float restorationThreshold = 60f;
 
         public float CurrentValue { get; private set; }
         public float NormalizedValue => CurrentValue / maxValue;
