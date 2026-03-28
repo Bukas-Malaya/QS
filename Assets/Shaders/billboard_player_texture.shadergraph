@@ -2193,7 +2193,7 @@
     "m_Title": "Billboard view",
     "m_Position": {
         "x": -844.0,
-        "y": -1753.0
+        "y": -1753.0001220703125
     }
 }
 
@@ -3140,6 +3140,16 @@
 }
 
 {
+    "m_SGVersion": 2,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalLitSubTarget",
+    "m_ObjectId": "93fa69e5dd9d4818b0cf5528a497ee11",
+    "m_WorkflowMode": 1,
+    "m_NormalDropOffSpace": 0,
+    "m_ClearCoat": false,
+    "m_BlendModePreserveSpecular": true
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "95e4867db9474a2db74aaf9f278e7665",
@@ -3162,15 +3172,6 @@
         "w": 0.0
     },
     "m_LiteralMode": false
-}
-
-{
-    "m_SGVersion": 2,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalUnlitSubTarget",
-    "m_ObjectId": "9a3ebf01b8654377a5555f0a4c8b04c4",
-    "m_KeepLightingVariants": false,
-    "m_DefaultDecalBlending": true,
-    "m_DefaultSSAO": true
 }
 
 {
@@ -3254,8 +3255,8 @@
     "m_ObjectId": "9fddf7517bd1487dbd8a1ed0776976d7",
     "m_Title": "billboard",
     "m_Position": {
-        "x": -825.0,
-        "y": -712.0
+        "x": -825.0001220703125,
+        "y": -712.0000610351563
     }
 }
 
@@ -3945,7 +3946,7 @@
     "m_ObjectId": "cd8e20937f9441bd89a6aaacc9849883",
     "m_Datas": [],
     "m_ActiveSubTarget": {
-        "m_Id": "9a3ebf01b8654377a5555f0a4c8b04c4"
+        "m_Id": "93fa69e5dd9d4818b0cf5528a497ee11"
     },
     "m_AllowMaterialOverride": false,
     "m_SurfaceType": 1,
@@ -4708,12 +4709,12 @@
         "m_Id": "f54682877838436cafdd60e81d4a13d0"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 1,
+    "m_SurfaceType": 0,
     "m_ZWriteControl": 0,
     "m_ZTestMode": 4,
     "m_AlphaMode": 0,
     "m_RenderFace": 2,
-    "m_AlphaClip": true,
+    "m_AlphaClip": false,
     "m_CustomEditorGUI": ""
 }
 

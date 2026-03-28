@@ -31,6 +31,9 @@ namespace WhereFirefliesReturn.Resources
         [Header("Events")]
         public UnityEvent OnPuzzleSolved; // wire this to DialogueStarter.TriggerDialogue() in Inspector
 
+        [Header("Particles")]
+        [SerializeField] private ParticleSystem FireFlyParticles;
+
         private bool isSolved = false;
 
         void Awake()
@@ -38,6 +41,12 @@ namespace WhereFirefliesReturn.Resources
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             audioSource = GetComponent<AudioSource>();
+        }
+
+        void Start()
+        {
+            if (FireFlyParticles != null)
+                FireFlyParticles.Stop();
         }
 
         /// <summary>Called by farm_bed whenever a crop is planted.</summary>
@@ -91,7 +100,7 @@ namespace WhereFirefliesReturn.Resources
             Debug.Log("[FieldPuzzleManager] Triggering OnPuzzleSolved event.");
             // Trigger dialogue/cutscene (wired in Inspector)
             OnPuzzleSolved?.Invoke();
-            
+            FireFlyParticles?.Play();
         }
 
         Vector3 GetFieldCenter()
