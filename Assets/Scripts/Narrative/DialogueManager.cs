@@ -51,13 +51,13 @@ namespace WhereFirefliesReturn.Narrative
                 foreach (char c in line.text) {
                     OnCharacterTyped?.Invoke(c.ToString());
                     
-                    if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
-                        string remainingText = new string(line.text.Substring(line.text.IndexOf(c) + 1));
-                        if (!string.IsNullOrEmpty(remainingText)) {
-                            OnCharacterTyped?.Invoke(remainingText);
-                        }
-                        break;
-                    }
+                    //if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
+                    //    string remainingText = new string(line.text.Substring(line.text.IndexOf(c) + 1));
+                    //    if (!string.IsNullOrEmpty(remainingText)) {
+                    //        OnCharacterTyped?.Invoke(remainingText);
+                    //    }
+                    //    break;
+                    //}
                     
                     yield return new WaitForSeconds(charDelay);
                 }
