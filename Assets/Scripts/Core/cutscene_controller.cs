@@ -13,6 +13,7 @@ public class cutscene_controller : MonoBehaviour
 
     void Start()
     {
+            
         PlayCutscene(videoPlayer.clip);
     }
     public void PlayCutscene(VideoClip clip)
