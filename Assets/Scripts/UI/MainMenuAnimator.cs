@@ -5,21 +5,22 @@ using TMPro;
 
 namespace WhereFirefliesReturn.UI
 {
-    /// <summary>
+    /// summary
     /// Drives the full cinematic opening sequence for the Main Menu scene.
-    /// Sequence: black → background bleeds in → fireflies spawn →
-    ///           title emerges → tagline word-reveal → buttons slide up →
-    ///           everything breathes, indefinitely.
+    /// Sequence: black → bgTop visible at bottom → bgBottom pans up from below →
+    ///           fireflies spawn → title emerges → tagline word-reveal →
+    ///           buttons slide up → everything breathes, indefinitely.
     ///
-    /// All timing values are exposed in the Inspector so Jerome can tune
-    /// the feel without touching code.
+    ///   bgTop    — sky layer, stays mostly still, subtle upward drift (slower)
+    ///   bgBottom — ground/forest layer, starts below screen, pans upward (faster)
+    ///   Both images need to be taller than the canvas so they have room to scroll.
+    ///   Set Image → Preserve Aspect off, let them fill width, height ~130–150% of canvas.
     /// </summary>
     public class MainMenuAnimator : MonoBehaviour
     {
-        // ── UI References ──────────────────────────────────────────────────────
         [Header("Background Layers")]
-        [SerializeField] private Image bgBottom;        // deep forest floor
-        [SerializeField] private Image bgTop;           // midnight sky bleed
+        [SerializeField] private Image bgBottom;        // ground / forest floor — pans up fast
+        [SerializeField] private Image bgTop;           // sky layer — visible first, drifts slowly
         [SerializeField] private Image moonGlow;        // soft radial white
 
         [Header("Title")]
@@ -30,50 +31,58 @@ namespace WhereFirefliesReturn.UI
 
         [Header("Buttons")]
         [SerializeField] private CanvasGroup buttonGroup;
-        [SerializeField] private Image beginGlow;       // pulse behind Start button
+        [SerializeField] private Image beginGlow;
 
         [Header("Fireflies")]
         [SerializeField] private FireflyEmitter ambientFireflies;
         [SerializeField] private FireflyEmitter focalFireflies;
+        
 
-        // ── Timing (seconds) ───────────────────────────────────────────────────
         [Header("Sequence Timing")]
-        [SerializeField] private float bgFadeDuration       = 1.60f;
-        [SerializeField] private float firstFireflyDelay    = 0.80f;  // after bg fades
-        [SerializeField] private float titleRevealStart     = 1.40f;  // after first firefly
+        [SerializeField] private float bgTopFadeDuration    = 1.00f;  // sky fades in first
+        [SerializeField] private float bgBottomPanDelay     = 0.40f;  // delay before ground pans
+        [SerializeField] private float bgBottomPanDuration  = 2.20f;  // ground pan-in duration
+        [SerializeField] private float firstFireflyDelay    = 0.80f;
+        [SerializeField] private float titleRevealStart     = 1.40f;
         [SerializeField] private float titleFadeDuration    = 1.30f;
-        [SerializeField] private float taglineStartDelay    = 0.55f;  // after title settles
-        [SerializeField] private float wordInterval         = 0.22f;  // per word
-        [SerializeField] private float wordFadeDuration     = 0.14f;
-        [SerializeField] private float buttonRevealDelay    = 0.75f;  // after last tagline word
+        [SerializeField] private float taglineStartDelay    = 0.55f;
+        [SerializeField] private float wordInterval         = 0.22f;
+        [SerializeField] private float buttonRevealDelay    = 0.75f;
         [SerializeField] private float buttonSlideDuration  = 0.70f;
-        [SerializeField] private float buttonSlideDistance  = 42f;    // px, slides up from below
+        [SerializeField] private float buttonSlideDistance  = 42f;
+
+        [Header("Parallax")]
+        [Tooltip("How far below (px) bgBottom starts before panning up")]
+        [SerializeField] private float bgBottomStartOffset  = 300f;
+        [Tooltip("Continuous upward drift speed after pan-in (px/sec) — bgBottom")]
+        [SerializeField] private float bgTopStartOffset = 300f;
+        [SerializeField] private float bgBottomDriftSpeed   = 6f;
+        [Tooltip("Continuous upward drift speed after pan-in (px/sec) — bgTop (slower)")]
+        [SerializeField] private float bgTopDriftSpeed      = 2.5f;
+        [Tooltip("Max upward distance before both layers wrap/stop drifting")]
+        [SerializeField] private float bgDriftMaxOffset     = 120f;
 
         [Header("Breathing Loop")]
-        [SerializeField] private float breatheAmplitude    = 0.018f;  // max scale offset
-        [SerializeField] private float breathePeriod       = 3.60f;   // seconds per full cycle
+        [SerializeField] private float breatheAmplitude    = 0.018f;
+        [SerializeField] private float breathePeriod       = 3.60f;
 
         [Header("Glow Pulse")]
         [SerializeField] private float glowMin             = 0.12f;
         [SerializeField] private float glowMax             = 0.48f;
         [SerializeField] private float glowPeriod          = 2.10f;
 
-        [Header("Background Oscillation")]
-        [SerializeField] private float bgOscillationPeriod = 7.00f;
-
-        // ── Background oscillation target colours ──────────────────────────────
-        private static readonly Color BgBottomA = new Color(0.051f, 0.122f, 0.051f, 1f); // #0D1F0D
-        private static readonly Color BgBottomB = new Color(0.035f, 0.090f, 0.090f, 1f); // teal shift
-
-        // ── Runtime state ──────────────────────────────────────────────────────
         private Vector2 buttonGroupShown;
         private Vector2 buttonGroupHidden;
         private RectTransform buttonGroupRect;
+        private RectTransform bgBottomRect;
+        private RectTransform bgTopRect;
+        private Vector2 bgBottomOrigin;   // resting position after pan-in
+        private Vector2 bgTopOrigin;      // resting position of sky
         private string[] taglineWords;
 
-        // ── Unity lifecycle ────────────────────────────────────────────────────
         void Awake()
         {
+            CacheRects();
             HideAll();
             CacheButtonPositions();
             CacheTaglineWords();
@@ -84,40 +93,100 @@ namespace WhereFirefliesReturn.UI
             StartCoroutine(OpeningSequence());
         }
 
-        // ── Master sequence ────────────────────────────────────────────────────
+        // sequence
         IEnumerator OpeningSequence()
         {
-            // 1 — Background bleeds in
-            yield return FadeIn(bgBottom, bgFadeDuration, 1.00f);
-            StartCoroutine(FadeIn(bgTop,    bgFadeDuration * 0.8f, 0.60f));
-            StartCoroutine(FadeIn(moonGlow, bgFadeDuration * 0.6f, 0.12f));
+            // 1 — Sky (bgTop) fades in first at its resting position — bottom of image visible
+            StartCoroutine(FadeIn(bgTop,    bgTopFadeDuration, 1.00f));
+            StartCoroutine(FadeIn(moonGlow, bgTopFadeDuration * 0.6f, 0.12f));
+            yield return Wait(bgBottomPanDelay);
 
-            // 2 — Ambient fireflies drift up
+            // 2 — Ground (bgBottom) pans up from below into view
+            StartCoroutine(PanBgTopIn());
+            yield return PanBgBottomIn();
+
+            // 3 — Ambient fireflies drift up
             yield return Wait(firstFireflyDelay);
             ambientFireflies?.StartEmitting();
 
-            // 3 — Title materialises; focal fireflies burst simultaneously
+            // 4 — Title materialises
             yield return Wait(titleRevealStart);
             StartCoroutine(RevealTitle());
             yield return Wait(titleFadeDuration * 0.5f);
             focalFireflies?.TriggerBurst();
             yield return Wait(titleFadeDuration * 0.5f);
 
-            // 4 — Tagline appears word by word
+            // 5 — Tagline word by word
             yield return Wait(taglineStartDelay);
             yield return RevealTagline();
 
-            // 5 — Buttons slide up into view
+            // 6 — Buttons slide up
             yield return Wait(buttonRevealDelay);
             yield return RevealButtons();
 
-            // 6 — Perpetual ambient loops
+            // 7 — Perpetual loops
             StartCoroutine(TitleBreathe());
             StartCoroutine(BeginGlowPulse());
-            StartCoroutine(BackgroundOscillate());
+            StartCoroutine(ParallaxDrift());
         }
 
-        // ── Step coroutines ────────────────────────────────────────────────────
+        IEnumerator PanBgBottomIn()
+        {
+            if (bgBottomRect == null) yield break;
+
+            Vector2 startPos = bgBottomOrigin - new Vector2(0f, bgBottomStartOffset);
+            bgBottomRect.anchoredPosition = startPos;
+            SetAlpha(bgBottom, 1f); // fully visible, just offscreen below
+
+            float elapsed = 0f;
+            while (elapsed < bgBottomPanDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / bgBottomPanDuration));
+                bgBottomRect.anchoredPosition = Vector2.Lerp(startPos, bgBottomOrigin, t);
+                yield return null;
+            }
+            bgBottomRect.anchoredPosition = bgBottomOrigin;
+        }
+
+        IEnumerator PanBgTopIn()
+        {
+            if (bgTopRect == null) yield break;
+
+            Vector2 startPos = bgTopOrigin + new Vector2(0f, bgTopStartOffset); // starts above
+            bgTopRect.anchoredPosition = startPos;
+            SetAlpha(bgTop, 1f);
+
+            float elapsed = 0f;
+            while (elapsed < bgTopFadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / bgTopFadeDuration));
+                bgTopRect.anchoredPosition = Vector2.Lerp(startPos, bgTopOrigin, t);
+                yield return null;
+            }
+            bgTopRect.anchoredPosition = bgTopOrigin;
+        }
+
+        IEnumerator ParallaxDrift()
+        {
+            float bottomOffset = 0f;
+            float topOffset    = 0f;
+
+            while (true)
+            {
+                bottomOffset = Mathf.Min(bottomOffset + bgBottomDriftSpeed * Time.deltaTime, bgDriftMaxOffset);
+                topOffset    = Mathf.Min(topOffset    + bgTopDriftSpeed    * Time.deltaTime, bgDriftMaxOffset * 0.5f);
+
+                if (bgBottomRect != null)
+                    bgBottomRect.anchoredPosition = bgBottomOrigin + new Vector2(0f, bottomOffset);
+                if (bgTopRect != null)
+                    bgTopRect.anchoredPosition    = bgTopOrigin    - new Vector2(0f, topOffset);
+
+                yield return null;
+            }
+        }
+
         IEnumerator RevealTitle()
         {
             if (titleText == null) yield break;
@@ -144,7 +213,6 @@ namespace WhereFirefliesReturn.UI
         {
             if (taglineText == null || taglineWords == null) yield break;
 
-            // Restore full text, then clear and rebuild word-by-word
             taglineText.text  = "";
             Color textColor   = taglineText.color;
             taglineText.color = new Color(textColor.r, textColor.g, textColor.b, 1f);
@@ -154,8 +222,6 @@ namespace WhereFirefliesReturn.UI
             {
                 built += (built.Length > 0 ? " " : "") + word;
                 taglineText.text = built;
-
-                // Brief per-word fade duration (feel without TMP vertex manipulation)
                 yield return Wait(wordInterval);
             }
         }
@@ -180,7 +246,6 @@ namespace WhereFirefliesReturn.UI
             buttonGroup.blocksRaycasts  = true;
         }
 
-        // ── Perpetual loops ────────────────────────────────────────────────────
         IEnumerator TitleBreathe()
         {
             if (titleText == null) yield break;
@@ -205,20 +270,6 @@ namespace WhereFirefliesReturn.UI
             }
         }
 
-        IEnumerator BackgroundOscillate()
-        {
-            if (bgBottom == null) yield break;
-            while (true)
-            {
-                float t = (Mathf.Sin(Time.time * Mathf.PI * 2f / bgOscillationPeriod) + 1f) * 0.5f;
-                Color c = Color.Lerp(BgBottomA, BgBottomB, t);
-                c.a     = bgBottom.color.a;
-                bgBottom.color = c;
-                yield return null;
-            }
-        }
-
-        // ── Fade helpers ───────────────────────────────────────────────────────
         IEnumerator FadeIn(Image img, float duration, float targetAlpha)
         {
             if (img == null) yield break;
@@ -241,11 +292,25 @@ namespace WhereFirefliesReturn.UI
 
         static void SetAlpha(Image img, float alpha)
         {
+            if (img == null) return;
             Color c = img.color;
             img.color = new Color(c.r, c.g, c.b, alpha);
         }
 
-        // ── Setup helpers ──────────────────────────────────────────────────────
+        void CacheRects()
+        {
+            if (bgBottom != null)
+            {
+                bgBottomRect   = bgBottom.GetComponent<RectTransform>();
+                bgBottomOrigin = bgBottomRect.anchoredPosition;
+            }
+            if (bgTop != null)
+            {
+                bgTopRect   = bgTop.GetComponent<RectTransform>();
+                bgTopOrigin = bgTopRect.anchoredPosition;
+            }
+        }
+
         void HideAll()
         {
             SetAlpha(bgBottom, 0f);

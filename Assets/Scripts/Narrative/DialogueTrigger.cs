@@ -15,6 +15,8 @@ namespace WhereFirefliesReturn.Narrative
         [Tooltip("Should the dialogue only trigger once?")]
         [SerializeField] private bool triggerOnlyOnce = false;
         private bool hasTriggered = false;
+
+        
         private void Awake()
         {
             if (startOnAwake && dialogueLines != null && dialogueLines.Length > 0)

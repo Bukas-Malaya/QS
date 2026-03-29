@@ -32,6 +32,7 @@ namespace WhereFirefliesReturn.Resources
 
         [Header("Interaction")]
         [SerializeField] private string emptyPrompt = "Press E to plant crop";
+        [SerializeField] private ParticleSystem interactionEffect;
         private MaterialPropertyBlock propertyBlock;
         private Renderer renderer;
         [SerializeField] public bool isPlanted = false; //Whether the crop is planted or not
@@ -89,6 +90,7 @@ namespace WhereFirefliesReturn.Resources
                 if (n != null) n.EvaluateCompanions();
 
             FieldPuzzleManager.Instance?.OnBedPlanted();
+            interactionEffect?.Play();
         }
 
         public override void Plant()
@@ -123,6 +125,7 @@ namespace WhereFirefliesReturn.Resources
                 
                 FieldPuzzleManager.Instance?.OnBedPlanted();
             }
+            interactionEffect?.Play();
         }
         private IEnumerator TempPrompt(string message)
             {

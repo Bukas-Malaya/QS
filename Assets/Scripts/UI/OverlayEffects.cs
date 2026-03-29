@@ -20,10 +20,31 @@ public class OverlayEffects : MonoBehaviour
             yield return null;
         }
         overlayImage.color = new Color(0, 0, 0, 0);
-    }
-
-    void Update()
-    {
         
     }
+
+    private System.Collections.IEnumerator FadeOut(float duration, System.Action onComplete)
+    {
+        overlayImage.color = new Color(0, 0, 0, 0);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            overlayImage.color = new Color(0, 0, 0, Mathf.Lerp(0, 1, elapsed / duration));
+            yield return null;
+        }
+        overlayImage.color = new Color(0, 0, 0, 1);
+        onComplete?.Invoke(); // fires when fully black
+    }
+
+    public void TriggerFadeIn()
+    {
+        StartCoroutine(FadeIn(fadeDuration));
+    }
+
+    public void TriggerFadeOut(System.Action onComplete = null)
+    {
+        StartCoroutine(FadeOut(fadeDuration, onComplete));
+    }
+
 }

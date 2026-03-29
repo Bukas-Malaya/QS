@@ -21,6 +21,8 @@ namespace WhereFirefliesReturn.Narrative
 
         public bool IsPlaying { get; private set; }
 
+        public bool canInteract = true;
+
         public UnityEvent<DialogueLine> OnLineStarted;
         public UnityEvent<string> OnCharacterTyped;
         public UnityEvent OnDialogueComplete;
@@ -62,7 +64,7 @@ namespace WhereFirefliesReturn.Narrative
                     yield return new WaitForSeconds(charDelay);
                 }
                 
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+                yield return new WaitUntil(() => canInteract && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)));
             }
 
             IsPlaying = false;
